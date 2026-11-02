@@ -1,6 +1,6 @@
 # Amiga port intake: Quake original GPL engine
 
-- Port Atlas: [g-quake-original-gpl-engine](https://www.amigachrome.com/ports/#g-quake-original-gpl-engine)
+- Port Atlas: [g-quake-original-gpl-engine](https://www.amicradle.com/ports/#g-quake-original-gpl-engine)
 - Priority: `P3`
 - Atlas decision: `defer`
 - Upstream source: `https://github.com/id-Software/Quake`
