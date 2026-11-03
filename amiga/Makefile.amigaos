@@ -1,0 +1,67 @@
+# Quake for AmigaOS 3.x / AmiCradle, 68040 + FPU, on ACGame and AHI, built
+# with GCC from the Amiga Quake 2.30 sources (amiga230/).
+#
+#   make -f amiga/Makefile.amigaos STOVE=/path/to/os32-gcc16/prefix \
+#        NDK=/path/to/gfopensdk/OpenNDK/Include_H \
+#        ACGAME=/path/to/amicradle-guest/gameports/acgame
+#
+# The engine is amiga230's C (its C routines; the 68k assembly needs vasm,
+# not yet in this build). The system, video, input and sound layers are
+# amiga/: ACGame for the screen and input, ahi.device for the sound. CD audio
+# and the network are id's null drivers (WinQuake/cd_null.c, net_none.c).
+# Output: build/amigaos/quake. Put it in a drawer with id1/pak0.pak.
+
+STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16/prefix
+NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
+ACGAME  ?= ../amicradle-guest/gameports/acgame
+CC      = $(STOVE)/bin/m68k-amigaos-gcc
+CPU     ?= -m68040 -m68881
+OPT     ?= -O2 -fomit-frame-pointer -ffast-math
+BUILD   = build/amigaos
+
+CFLAGS  = -noixemul -std=gnu99 $(OPT) $(CPU) -w -fno-strict-aliasing \
+          -Iamiga230 -Iamiga -I$(ACGAME)/include -I$(NDK) -include amiga/quake_acgame.h
+OWNFLAGS = -noixemul -std=gnu99 $(OPT) $(CPU) -Wall -Wno-unused-parameter \
+          -Iamiga230 -Iamiga -I$(ACGAME)/include -I$(NDK) -include amiga/quake_acgame.h
+ACFLAGS = -noixemul -std=gnu99 -O2 $(CPU) -Wall -Wextra -Werror \
+          -fno-delete-null-pointer-checks -I$(ACGAME)/include -I$(NDK)
+LDFLAGS = -noixemul $(CPU)
+
+ENGINE  = chase cl_demo cl_input cl_main cl_parse cl_tent cmd common console crc cvar \
+          draw d_edge d_fill d_init d_modech d_part d_polyset d_scan d_sky d_sprite \
+          d_surf d_vars d_zpoint host host_cmd keys location menu mathlib model \
+          net_loop net_main net_vcr pr_cmds pr_edict pr_exec r_aclip r_alias \
+          r_bsp r_light r_draw r_efrag r_edge r_misc r_main r_sky r_sprite r_surf \
+          r_part r_vars sbar screen sv_main sv_phys sv_move sv_user zone view wad \
+          world snd_dma snd_mix snd_mem sys_amigaclip
+OWN     = sys_acgame vid_acgame in_acgame snd_acgame sys_amiga stack
+ID      = cd_null net_none
+ACG     = c2p_ref ham8 platform_aros_aga
+OBJS    = $(ENGINE:%=$(BUILD)/%.o) $(OWN:%=$(BUILD)/amiga/%.o) $(ID:%=$(BUILD)/id/%.o) \
+          $(ACG:%=$(BUILD)/acgame/%.o)
+
+all: $(BUILD)/quake
+
+$(BUILD)/quake: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^ -lm
+
+$(BUILD)/%.o: amiga230/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD)/amiga/%.o: amiga/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(OWNFLAGS) -c -o $@ $<
+
+$(BUILD)/id/%.o: WinQuake/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD)/acgame/%.o: $(ACGAME)/src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(ACFLAGS) -c -o $@ $<
+
+clean:
+	rm -rf $(BUILD)
+
+.PHONY: all clean

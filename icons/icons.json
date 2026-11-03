@@ -1,0 +1,12 @@
+{
+  "about": "The Workbench icons of the Quake drawer: python3 AMICRADLE/scripts/port_icons.py icons/icons.json --out icons (DalsinAI/amicradle). The art is id's own program icon (WinQuake/quake.ico).",
+  "drawer": {
+    "name": "Quake"
+  },
+  "badge": "art/quake.png",
+  "icons": [
+    {"file": "quake.info", "kind": "tool", "stack": 262144},
+    {"file": "ReadMe.info", "kind": "readme"},
+    {"file": "COPYING.txt.info", "kind": "readme"}
+  ]
+}
