@@ -1,0 +1,70 @@
+{
+  "drawer": "Quake",
+  "drawer_icon": "icons/Quake.info",
+  "archive": "quake-{version}-68040",
+  "members": [
+    {
+      "name": "quake",
+      "build": "quake",
+      "check": "executable_sha256"
+    },
+    {
+      "name": "quake.info",
+      "repo": "icons/quake.info"
+    },
+    {
+      "name": "ReadMe",
+      "readme": "package/ReadMe.in"
+    },
+    {
+      "name": "ReadMe.info",
+      "repo": "icons/ReadMe.info"
+    },
+    {
+      "name": "COPYING.txt",
+      "repo": "gnu.txt"
+    },
+    {
+      "name": "COPYING.txt.info",
+      "repo": "icons/COPYING.txt.info"
+    },
+    {
+      "name": "id1.info",
+      "repo": "icons/id1.info"
+    },
+    {
+      "name": "id1/ReadMe.txt",
+      "repo": "package/data-ReadMe.txt"
+    }
+  ],
+  "aminet": [
+    [
+      "Short",
+      "Quake 2.30 (GCC build) on ACGame, 68040+FPU"
+    ],
+    [
+      "Author",
+      "Quake: id Software; Amiga port: Frank Wille, Steffen Haeuser; this build: AmiCradle Team"
+    ],
+    [
+      "Uploader",
+      "AmiCradle Team"
+    ],
+    [
+      "Type",
+      "game/shoot"
+    ],
+    [
+      "Version",
+      "{version}"
+    ],
+    [
+      "Requires",
+      "AmigaOS 3.x, 68040/68060 with FPU, AGA or RTG, AHI, Quake data (id1/pak0.pak)"
+    ],
+    [
+      "Architecture",
+      "m68k-amigaos >= 3.0"
+    ]
+  ]
+}

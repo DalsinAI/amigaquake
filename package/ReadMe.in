@@ -1,0 +1,53 @@
+Quake @VERSION@ for AmigaOS 3.x (AmiCradle)
+============================================
+
+Quake by id Software (1996), from the Amiga Quake 2.30 sources by Frank
+Wille and Steffen Haeuser, built with GCC for a 68040 or 68060 with an
+FPU, on ACGame (AGA or RTG) with sound through AHI. Status: TESTING, not a
+release.
+
+Requirements
+------------
+
+- AmigaOS 3.x, a 68040 or 68060 with an FPU, AGA or an RTG board.
+- 16 MB of free Fast RAM for the game (quake -mem N for another size).
+- AHI for the sound.
+- Quake's data: id1/pak0.pak, from the shareware version or your own
+  copy of the full game (see id1/ReadMe.txt).
+
+Installing
+----------
+
+Unpack the archive where you keep games (lha x quake-...lha Games:), then
+copy pak0.pak (and pak1.pak of the full game) into the drawer's id1 drawer.
+
+Playing
+-------
+
+- Double-click the quake icon, or from a Shell: cd to the drawer, then
+  quake. The PC version's command line works (quake +timedemo demo1).
+- ENV:ACGame/Display set to AGA or RTG chooses the screen.
+- The PC version's keys; ` opens the console. The mouse turns; hold the
+  mlook key (or bind +mlook) to look up and down.
+- This build draws with Quake's C code, not the 2.30 release's 68k
+  assembly, and has no CD audio and no network play yet.
+
+Licence
+-------
+
+Quake's source is under the GNU General Public License, version 2
+(COPYING.txt, id's own copy). The Amiga port is Frank Wille's and Steffen
+Haeuser's (Aminet game/shoot/Quake_src); see amiga230/README.md in the
+source for the files of that release this build leaves out. The game data
+is id Software's and is not part of this archive.
+
+Build
+-----
+
+Source commit @SOURCE_COMMIT@,
+built with:
+@COMPILER_RELEASE@
+The program's SHA-256:
+@EXECUTABLE_SHA256@
+
+Port: the AmiCradle Team, https://github.com/DalsinAI/amigaquake
