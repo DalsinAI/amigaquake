@@ -49,7 +49,12 @@ int     r_maxsurfsseen, r_maxedgesseen, r_cnumsurfs;
 qboolean  r_surfsonstack;
 int     r_clipflags;
 
+#ifdef __GNUC__
+/* m68k GCC aligns globals to 2 bytes; R_RenderView checks this one for 4. */
+byte    *r_warpbuffer __attribute__((aligned(4)));
+#else
 byte    *r_warpbuffer;
+#endif
 
 byte    *r_stack_start;
 

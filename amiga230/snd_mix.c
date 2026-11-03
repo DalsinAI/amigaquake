@@ -28,7 +28,7 @@ int   *snd_p, snd_linear_count, snd_vol;
 short *snd_out;
 
 
-#if 1
+#if defined(M68KASM) || defined(PPCASM)
 extern void S_TransferPaintBuffer(int);
 
 
