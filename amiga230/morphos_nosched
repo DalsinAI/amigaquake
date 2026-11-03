@@ -1,0 +1,20 @@
+-c99
+-elf
+-no-regnames
+-no-multiple-ccs
+-use-lmw
+-madd
+-no-align-args
+-cc=vbccppc -quiet %s -o= %s %s -O=%ld -Ivincludemos: -D__MORPHOS__ -DNO_INLINE_STDARG -D__MORPHOS_NODIRECTCALL
+-ccv=vbccppc %s -o= %s %s -O=%ld -Ivincludemos: -D__MORPHOS__ -DNO_INLINE_STDARG -D__MORPHOS_NODIRECTCALL
+-as=vasmppc_std -quiet -Felf -opt-branch -no-regnames %s -o %s
+-asv=vasmppc_std -Felf -opt-branch -no-regnames %s -o %s
+-rm=delete quiet %s
+-rmv=delete %s
+-ld=vlink -belf32amiga -s -x -P__amigappc__ -Cvbccelf vlibmos:startup.o %s %s -lvc -o %s
+-l2=vlink -belf32amiga -s -x -P__amigappc__ -Cvbccelf %s %s -o %s
+-ldv=vlink -belf32amiga -t -s -x -P__amigappc__ -Cvbccelf vlibmos:startup.o %s %s -lvc -o %s
+-l2v=vlink -belf32amiga -t -s -x -P__amigappc__ -Cvbccelf %s %s -o %s
+-ul=-l%s
+-cf=-F%s
+-ml=500

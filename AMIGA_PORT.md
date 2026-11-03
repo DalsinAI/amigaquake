@@ -20,3 +20,10 @@ No build, runtime, playability or release claim is made by this source-intake co
 ## Rights and data boundary
 
 review; Confirm source/data licences before release.
+
+## Base: Quake for Amiga 2.30
+
+`amiga230/` is the Amiga Quake source 2.30 by Frank Wille and Steffen
+Häuser (Aminet game/shoot/Quake_src), id's GPL Quake with their AmigaOS
+ports and 68k assembly. See `amiga230/README.md` for what was left out of
+it and why. The AmiCradle build of it (GCC, ACGame, AHI) is to follow.
