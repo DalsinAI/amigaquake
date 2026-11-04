@@ -243,12 +243,24 @@ void Sys_LowFPPrecision (void)
 
 //=============================================================================
 
+static void	*hunk;
+
+/* The hunk back to exec at the exit. Registered before sys_init's own
+ * exit function, so it runs after it, once the sound has stopped. */
+static void free_hunk (void)
+{
+	if (hunk)
+		FreeVec (hunk);
+	hunk = NULL;
+}
+
 int main (int argc, char **argv)
 {
 	static quakeparms_t    parms;
 	double	time, oldtime, newtime;
 	int		i;
 
+	atexit (free_hunk);
 	if (sys_init () != 0)
 		return 20;
 	/* Unbuffered, so the log is complete when something goes wrong. */
@@ -260,7 +272,7 @@ int main (int argc, char **argv)
 	if (i && i < com_argc-1)
 		parms.memsize = (int)(Q_atof (com_argv[i+1]) * 1024 * 1024);
 	/* The hunk from exec: libnix's malloc does not give one this large. */
-	parms.membase = AllocVec (parms.memsize, MEMF_ANY);
+	parms.membase = hunk = AllocVec (parms.memsize, MEMF_ANY);
 	if (!parms.membase)
 	{
 		printf ("quake: not enough memory for %d MB (largest free block %lu KB)\n",
