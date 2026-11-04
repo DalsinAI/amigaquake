@@ -26,8 +26,11 @@ cd "$ROOT"
 if [ ! -x "$STOVE/bin/m68k-amigaos-gcc" ] && [ -x "$STOVE/prefix/bin/m68k-amigaos-gcc" ]; then
     STOVE="$STOVE/prefix"
 fi
-echo "probe: HOME=$HOME ROOT=$ROOT"; ls "$HOME/AmiCradle" "$HOME/AmiCradle/stoves" "$(dirname "$ROOT")" 2>&1 | head -80
-ls -d "$HOME"/AmiCradle/*/gfopensdk* "$HOME"/AmiCradle*/*/*acgame* "$HOME"/AmiCradle*/*/*/gameports/acgame "$HOME"/AmiCradle*/*/*OpenGPU-SDK* "$HOME"/AmiCradle*/*/*/OpenGPU-SDK* "$HOME"/*/OpenNDK "$HOME"/*/*/OpenNDK "$HOME"/*/*/*/OpenNDK 2>/dev/null | head -40
+# Cradle's checkout of the guest repository sits beside this one.
+if [ -z "${ACGAME:-}" ] && [ -d "$ROOT/../DalsinAI__amigachrome-guest/gameports/acgame" ]; then
+    ACGAME="$ROOT/../DalsinAI__amigachrome-guest/gameports/acgame"
+    git -C "$ACGAME" log -1 --format='ACGame from %h %s' 2>&1 || true
+fi
 PATHS="STOVE=$STOVE"
 for v in NDK ACGAME OPENGPU; do
     eval "val=\${$v:-}"
@@ -35,6 +38,7 @@ for v in NDK ACGAME OPENGPU; do
 done
 make -f amiga/Makefile.amigaos $PATHS -j4 > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/amigaos/quake "$BUILD/quake"
+cp build/amigaos/quake "$OUT/quake"
 # OpenUpQuake: id's GLQuake on OpenGPU's MiniGL (OPENGPU is the OpenGPU kit).
 make -f amiga/openup/Makefile.amigaos $PATHS -j4 >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/openup/openupquake "$BUILD/openupquake"
