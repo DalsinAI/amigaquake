@@ -16,7 +16,7 @@ NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
 ACGAME  ?= ../amicradle-guest/gameports/acgame
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
 CPU     ?= -m68040 -m68881
-OPT     ?= -O2 -fomit-frame-pointer -ffast-math
+OPT     ?= -O2 -fomit-frame-pointer
 BUILD   = build/amigaos
 
 CFLAGS  = -noixemul -std=gnu99 $(OPT) $(CPU) -w -fno-strict-aliasing \
