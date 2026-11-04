@@ -22,6 +22,12 @@ cd "$ROOT"
 
 # NDK, ACGAME and OPENGPU are passed on when set; otherwise the Makefiles'
 # own defaults are used (Cradle's stove_build sets only STOVE and OUT).
+# A stove's compiler is in its prefix/.
+if [ ! -x "$STOVE/bin/m68k-amigaos-gcc" ] && [ -x "$STOVE/prefix/bin/m68k-amigaos-gcc" ]; then
+    STOVE="$STOVE/prefix"
+fi
+echo "probe: HOME=$HOME ROOT=$ROOT"; ls "$HOME/AmiCradle" "$HOME/AmiCradle/stoves" "$(dirname "$ROOT")" 2>&1 | head -80
+ls -d "$HOME"/AmiCradle/*/gfopensdk* "$HOME"/AmiCradle*/*/*acgame* "$HOME"/AmiCradle*/*/*/gameports/acgame "$HOME"/AmiCradle*/*/*OpenGPU-SDK* "$HOME"/AmiCradle*/*/*/OpenGPU-SDK* "$HOME"/*/OpenNDK "$HOME"/*/*/OpenNDK "$HOME"/*/*/*/OpenNDK 2>/dev/null | head -40
 PATHS="STOVE=$STOVE"
 for v in NDK ACGAME OPENGPU; do
     eval "val=\${$v:-}"
