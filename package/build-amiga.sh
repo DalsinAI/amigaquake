@@ -22,6 +22,9 @@ cd "$ROOT"
 
 make -f amiga/Makefile.amigaos STOVE="$STOVE" NDK="$NDK" ACGAME="$ACGAME" -j4 > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/amigaos/quake "$BUILD/quake"
+# OpenUpQuake: id's GLQuake on OpenGPU's MiniGL (OPENGPU is the OpenGPU kit).
+make -f amiga/openup/Makefile.amigaos STOVE="$STOVE" NDK="$NDK" ACGAME="$ACGAME" OPENGPU="$OPENGPU" -j4 >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
+cp build/openup/openupquake "$BUILD/openupquake"
 
 # What the ReadMe and the check name: the program's SHA-256, the commit, the
 # compiler and the commit's date (the archive's dates, so the same inputs

@@ -13,6 +13,14 @@
       "repo": "icons/quake.info"
     },
     {
+      "name": "openupquake",
+      "build": "openupquake"
+    },
+    {
+      "name": "openupquake.info",
+      "repo": "icons/openupquake.info"
+    },
+    {
       "name": "ReadMe",
       "readme": "package/ReadMe.in"
     },
@@ -40,7 +48,7 @@
   "aminet": [
     [
       "Short",
-      "Quake 2.30 (GCC build) on ACGame, 68040+FPU"
+      "Quake 2.30 (GCC) on ACGame, and GLQuake on OpenGPU"
     ],
     [
       "Author",

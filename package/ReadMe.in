@@ -32,6 +32,16 @@ Playing
 - This build draws with Quake's C code, not the 2.30 release's 68k
   assembly, and has no CD audio and no network play yet.
 
+OpenUpQuake
+-----------
+
+openupquake is id's GLQuake on OpenGPU: the same game drawn in OpenGL
+1.1 through MiniGL (minigl.library), at 640x480 by default (-width,
+-height, -conwidth to change it), with filtered textures. It needs an RTG
+screen and OpenGPU's 3D (an AmiCradle system has both); where OpenGPU
+draws its 3D on the CPU rather than a graphics chip, the plain quake is
+faster. -vsync waits for the display's refresh.
+
 Licence
 -------
 

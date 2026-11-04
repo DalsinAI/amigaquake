@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/stat.h>
 #include <exec/memory.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include "sys_amiga.h"
 
 qboolean isDedicated = false;
@@ -266,7 +267,16 @@ int main (int argc, char **argv)
 			parms.memsize / (1024*1024), (unsigned long)(AvailMem (MEMF_ANY | MEMF_LARGEST) / 1024));
 		return 20;
 	}
-	parms.basedir = "PROGDIR:";
+	/* The program's drawer by its full name ("Work:Games/Quake"): the game
+	 * adds "/id1", and "PROGDIR:/id1" would be the drawer's parent. */
+	{
+		static char	basedir[MAX_OSPATH];
+
+		if (NameFromLock (GetProgramDir (), basedir, sizeof(basedir)))
+			parms.basedir = basedir;
+		else
+			parms.basedir = "PROGDIR:";
+	}
 
 	parms.argc = com_argc;
 	parms.argv = com_argv;

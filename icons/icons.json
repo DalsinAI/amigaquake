@@ -5,8 +5,23 @@
   },
   "badge": "art/quake.png",
   "icons": [
-    {"file": "quake.info", "kind": "tool", "stack": 262144},
-    {"file": "ReadMe.info", "kind": "readme"},
-    {"file": "COPYING.txt.info", "kind": "readme"}
+    {
+      "file": "quake.info",
+      "kind": "tool",
+      "stack": 262144
+    },
+    {
+      "file": "openupquake.info",
+      "kind": "tool",
+      "stack": 262144
+    },
+    {
+      "file": "ReadMe.info",
+      "kind": "readme"
+    },
+    {
+      "file": "COPYING.txt.info",
+      "kind": "readme"
+    }
   ]
 }
