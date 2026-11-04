@@ -16,7 +16,9 @@ NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
 ACGAME  ?= ../amicradle-guest/gameports/acgame
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
 CPU     ?= -m68040 -m68881
-OPT     ?= -O2 -fomit-frame-pointer -ffast-math
+# No -ffast-math: with it the software renderer's edge sort (R_StepActiveU)
+# met an edge left of the screen and looped for ever (demo2, E1M4).
+OPT     ?= -O2 -fomit-frame-pointer
 BUILD   = build/amigaos
 
 CFLAGS  = -noixemul -std=gnu99 $(OPT) $(CPU) -w -fno-strict-aliasing \

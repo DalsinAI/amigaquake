@@ -40,6 +40,12 @@ byte	vid_buffer[BASEWIDTH*BASEHEIGHT];
 short	zbuffer[BASEWIDTH*BASEHEIGHT];
 byte	surfcache[256*1024];
 
+/* What the view is drawn into under water, slime or lava before
+   D_WarpScreen waves it onto vid_buffer. amiga230's r_warpbuffer is a
+   pointer its vid_amiga.c allocated; without it the view went to address
+   0 and overwrote the 68k's vectors and ExecBase. */
+static byte	warpbuffer[BASEWIDTH*BASEHEIGHT] __attribute__((aligned(4)));
+
 unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
 
@@ -68,6 +74,7 @@ void	VID_Init (unsigned char *palette)
 	vid.rowbytes = vid.conrowbytes = BASEWIDTH;
 
 	d_pzbuffer = zbuffer;
+	r_warpbuffer = warpbuffer;
 	D_InitCaches (surfcache, sizeof(surfcache));
 
 	if (sys_screen (BASEWIDTH, BASEHEIGHT) != 0)

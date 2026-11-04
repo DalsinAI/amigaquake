@@ -57,9 +57,18 @@ Quake_802, quake106; lab only, never committed or shipped):
 Not tested: playing a level by hand, saving, the full game's data, a real
 68040 or 68060's speed, the assembly routines.
 
-Known problem: twice, the software build stopped (the 68k spinning in
-system code, interrupts masked, no alert) when a demo's map loaded with
-the sound on; never with -nosound. Not found yet.
+Fixed in test4, both found with `quake +timedemo demo2` (E1M4, where the
+demo goes under water):
+
+- In water, slime or lava the view is drawn into a warp buffer first.
+  amiga230's `r_warpbuffer` was allocated by its vid_amiga.c, which this
+  build replaces, so it stayed NULL and the view went to address 0: the
+  68k's vectors and ExecBase were overwritten and the whole Amiga stopped
+  (the "spinning in system code, interrupts masked" stop seen before, and
+  the crash on falling into lava). `vid_acgame.c` now has its own buffer.
+- Built with `-ffast-math`, the edge sort (`R_StepActiveU`) then looped
+  for ever a moment later in the same demo. Built without it, demo2 plays
+  to the end, and demo1 is no slower.
 
 ## OpenUpQuake (GLQuake on OpenGPU)
 
