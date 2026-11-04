@@ -1,0 +1,68 @@
+# OpenUpQuake: GLQuake for AmigaOS 3.x / AmiCradle on OpenGPU, 68040 + FPU.
+# id's GLQuake (WinQuake/ with -DGLQUAKE) drawn through MiniGL
+# (minigl.library, OpenGL 1.1 on GFOpenGPU's 3D); the time and the sound
+# are the software build's (amiga/sys_acgame.c, snd_acgame.c, sys_amiga.c).
+#
+#   make -f amiga/openup/Makefile.amigaos STOVE=/path/to/os32-gcc16/prefix \
+#        NDK=/path/to/gfopensdk/OpenNDK/Include_H \
+#        ACGAME=/path/to/amicradle-guest/gameports/acgame \
+#        OPENGPU=/path/to/OpenGPU-SDK
+#
+# OPENGPU is the OpenGPU developer kit (Developer/OpenGPU-SDK on an
+# AmiCradle system): its include/mgl and lib/libmgl.a, libminigl.a.
+# Output: build/openup/openupquake. RTG with OpenGPU's 3D only.
+
+STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16/prefix
+NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
+ACGAME  ?= ../amicradle-guest/gameports/acgame
+OPENGPU ?= ../OpenGPU-SDK
+CC      = $(STOVE)/bin/m68k-amigaos-gcc
+CPU     ?= -m68040 -m68881
+OPT     ?= -O2 -fomit-frame-pointer -ffast-math
+BUILD   = build/openup
+
+INCS    = -Iamiga/openup -IWinQuake -Iamiga -I$(OPENGPU)/include -I$(ACGAME)/include -I$(NDK)
+CFLAGS  = -noixemul -std=gnu99 $(OPT) $(CPU) -w -fpermissive -fcommon -fno-strict-aliasing -DGLQUAKE $(INCS) \
+          -include amiga/openup/openup.h
+OWNFLAGS = -noixemul -std=gnu99 $(OPT) $(CPU) -Wall -Wno-unused-parameter -DGLQUAKE $(INCS) \
+          -include amiga/openup/openup.h
+ACFLAGS = -noixemul -std=gnu99 -O2 $(CPU) -Wall -Wextra -Werror \
+          -fno-delete-null-pointer-checks -I$(ACGAME)/include -I$(NDK)
+LDFLAGS = -noixemul $(CPU) -L$(OPENGPU)/lib
+
+ENGINE  = cl_demo cl_input cl_main cl_parse cl_tent chase cmd common console crc cvar \
+          gl_draw gl_mesh gl_model gl_refrag gl_rlight gl_rmain gl_rmisc gl_rsurf \
+          gl_screen gl_test gl_warp host host_cmd keys menu mathlib net_loop net_main \
+          net_vcr net_none pr_cmds pr_edict pr_exec r_part sbar sv_main sv_phys sv_move \
+          sv_user zone view wad world cd_null snd_dma snd_mem snd_mix
+OWN     = sys_acgame snd_acgame sys_amiga stack
+OPENUP  = gl_vidmgl
+ACG     = c2p_ref ham8 platform_aros_aga
+OBJS    = $(ENGINE:%=$(BUILD)/%.o) $(OWN:%=$(BUILD)/amiga/%.o) $(OPENUP:%=$(BUILD)/openup/%.o) \
+          $(ACG:%=$(BUILD)/acgame/%.o)
+
+all: $(BUILD)/openupquake
+
+$(BUILD)/openupquake: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^ -lmgl -lminigl -lm
+
+$(BUILD)/%.o: WinQuake/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD)/amiga/%.o: amiga/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(OWNFLAGS) -c -o $@ $<
+
+$(BUILD)/openup/%.o: amiga/openup/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(OWNFLAGS) -c -o $@ $<
+
+$(BUILD)/acgame/%.o: $(ACGAME)/src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(ACFLAGS) -c -o $@ $<
+
+clean:
+	rm -rf $(BUILD)
+
+.PHONY: all clean

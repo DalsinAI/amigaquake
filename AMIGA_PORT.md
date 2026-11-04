@@ -56,3 +56,24 @@ Quake_802, quake106; lab only, never committed or shipped):
 
 Not tested: playing a level by hand, saving, the full game's data, a real
 68040 or 68060's speed, the assembly routines.
+
+Known problem: twice, the software build stopped (the 68k spinning in
+system code, interrupts masked, no alert) when a demo's map loaded with
+the sound on; never with -nosound. Not found yet.
+
+## OpenUpQuake (GLQuake on OpenGPU)
+
+    make -f amiga/openup/Makefile.amigaos STOVE=... NDK=... ACGAME=... \
+         OPENGPU=/path/to/OpenGPU-SDK
+
+id's GLQuake (`WinQuake/` with `-DGLQUAKE`, built `-fpermissive -fcommon`
+for its 1996 C) drawn through MiniGL (minigl.library, OpenGL 1.1 on
+GFOpenGPU's 3D). `amiga/openup/gl_vidmgl.c` is the video layer (from
+gl_vidlinux.c: the palette as R, G, B, A in memory for the big-endian 68k)
+and reads the keys and mouse from MiniGL's window; the time and the sound
+are the software build's. RTG and OpenGPU only.
+
+In the lab (OpenGPU drawing its 3D on the CPU, no host GPU):
+`openupquake +timedemo demo1` 15.5 fps at 640x480 (the 68k all busy:
+the fill is the cost), 43.6 fps at 320x240 (the software build: 39.7).
+With OpenGPU on a graphics chip the fill is not the 68k's; not measured.
