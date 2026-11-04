@@ -44,7 +44,7 @@ byte	surfcache[256*1024];
    D_WarpScreen waves it onto vid_buffer. amiga230's r_warpbuffer is a
    pointer its vid_amiga.c allocated; without it the view went to address
    0 and overwrote the 68k's vectors and ExecBase. */
-static byte	warpbuffer[BASEWIDTH*BASEHEIGHT] __attribute__((aligned(16)));
+static byte	warpbuffer[BASEWIDTH*BASEHEIGHT] __attribute__((aligned(4)));
 
 unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];

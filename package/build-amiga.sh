@@ -20,10 +20,17 @@ BUILD=$(mktemp -d "${TMPDIR:-/tmp}/quake-package.XXXXXX")
 trap 'rm -rf "$BUILD"' EXIT INT TERM
 cd "$ROOT"
 
-make -f amiga/Makefile.amigaos STOVE="$STOVE" NDK="$NDK" ACGAME="$ACGAME" -j4 > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
+# NDK, ACGAME and OPENGPU are passed on when set; otherwise the Makefiles'
+# own defaults are used (Cradle's stove_build sets only STOVE and OUT).
+PATHS="STOVE=$STOVE"
+for v in NDK ACGAME OPENGPU; do
+    eval "val=\${$v:-}"
+    if [ -n "$val" ]; then PATHS="$PATHS $v=$val"; fi
+done
+make -f amiga/Makefile.amigaos $PATHS -j4 > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/amigaos/quake "$BUILD/quake"
 # OpenUpQuake: id's GLQuake on OpenGPU's MiniGL (OPENGPU is the OpenGPU kit).
-make -f amiga/openup/Makefile.amigaos STOVE="$STOVE" NDK="$NDK" ACGAME="$ACGAME" OPENGPU="$OPENGPU" -j4 >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
+make -f amiga/openup/Makefile.amigaos $PATHS -j4 >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/openup/openupquake "$BUILD/openupquake"
 
 # What the ReadMe and the check name: the program's SHA-256, the commit, the
