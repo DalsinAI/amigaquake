@@ -39,6 +39,7 @@ done
 make -f amiga/Makefile.amigaos $PATHS -j4 > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/amigaos/quake "$BUILD/quake"
 cp build/amigaos/quake "$OUT/quake"
+"$STOVE/bin/m68k-amigaos-nm" -n build/amigaos/quake | grep -i ' t ' > "$OUT/quake.syms" || true
 # OpenUpQuake: id's GLQuake on OpenGPU's MiniGL (OPENGPU is the OpenGPU kit).
 make -f amiga/openup/Makefile.amigaos $PATHS -j4 >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/openup/openupquake "$BUILD/openupquake"

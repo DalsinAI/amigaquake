@@ -249,6 +249,7 @@ int main (int argc, char **argv)
 	double	time, oldtime, newtime;
 	int		i;
 
+	printf ("DEBUG main at %p\n", (void *)main);
 	if (sys_init () != 0)
 		return 20;
 	/* Unbuffered, so the log is complete when something goes wrong. */
