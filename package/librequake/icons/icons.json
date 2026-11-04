@@ -1,0 +1,30 @@
+{
+  "about": "The Workbench icons of the LibreQuake drawer: python3 AMICRADLE/scripts/port_icons.py package/librequake/icons/icons.json --out package/librequake/icons (DalsinAI/amicradle). The art is LibreQuake's pixel icon (docs/branding/steam/icon.pixel.png, BSD-3-Clause).",
+  "drawer": {
+    "name": "LibreQuake"
+  },
+  "badge": "art/librequake.png",
+  "icons": [
+    {
+      "file": "quake.info",
+      "kind": "tool",
+      "stack": 262144
+    },
+    {
+      "file": "ReadMe.info",
+      "kind": "readme"
+    },
+    {
+      "file": "COPYING.txt.info",
+      "kind": "readme"
+    },
+    {
+      "file": "id1.info",
+      "kind": "drawer"
+    },
+    {
+      "file": "docs.info",
+      "kind": "drawer"
+    }
+  ]
+}

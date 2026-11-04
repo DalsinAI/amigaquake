@@ -1,0 +1,55 @@
+LibreQuake @VERSION@ for AmigaOS 3.x (AmiCradle)
+=================================================
+
+LibreQuake is a free and open replacement for Quake's data: its own maps,
+monsters, textures, models and sounds, playable with any Quake engine. This
+drawer is LibreQuake 0.09-beta (the "lite" set) with Quake 2.30 for the
+Amiga, so it is a whole game with nothing else to find: no id Software
+data is needed. Status: TESTING, not a release.
+
+Requirements
+------------
+
+- AmigaOS 3.x, a 68040 or 68060 with an FPU, AGA or an RTG board.
+- 16 MB of free Fast RAM for the game (quake -mem N for another size);
+  the largest LibreQuake map, lq_e0m2, fits in it.
+- AHI for the sound.
+
+Installing and playing
+----------------------
+
+Unpack the archive where you keep games (lha x librequake-...lha Games:)
+and double-click the quake icon, or from a Shell: cd to the drawer, then
+quake. The menu's SOLO starts the episode. ` opens the console; the
+PC version's keys, and the mouse turns. ENV:ACGame/Display set to AGA or
+RTG chooses the screen.
+
+This is the same Quake 2.30 program as the Quake drawer (DalsinAI/
+amigaquake): drawn with Quake's C code, no CD audio and no network play
+yet. LibreQuake's music (Ogg Vorbis tracks) is left out, as this Quake
+has no music player; LibreQuake also asks for one sound it does not ship
+(sound/player/slimbrn2.wav), which the console mentions.
+
+Licences
+--------
+
+- Quake 2.30: the GNU General Public License, version 2 (COPYING.txt).
+- LibreQuake's models, textures, maps and sounds: the BSD 3-Clause
+  licence (docs/COPYING); its QuakeC (progs.dat) and pop.lmp: GPL 2
+  (docs/misc-docs-COPYING). See docs/README-IMPORTANT-LICENCE-INFO and
+  docs/CREDITS for who made what.
+
+LibreQuake: https://github.com/lavenderdotpet/LibreQuake
+
+Build
+-----
+
+Source commit @SOURCE_COMMIT@,
+built with:
+@COMPILER_RELEASE@
+The program's SHA-256:
+@EXECUTABLE_SHA256@
+LibreQuake: lite.zip of release v0.09-beta, SHA-256:
+@DATA_SHA256@
+
+Port: the AmiCradle Team, https://github.com/DalsinAI/amigaquake
