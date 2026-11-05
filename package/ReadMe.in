@@ -3,8 +3,7 @@ Quake @VERSION@ for AmigaOS 3.x (AmiCradle)
 
 Quake by id Software (1996), from the Amiga Quake 2.30 sources by Frank
 Wille and Steffen Haeuser, built with GCC for a 68040 or 68060 with an
-FPU, on ACGame (AGA or RTG) with sound through AHI. Status: TESTING, not a
-release.
+FPU, on ACGame (AGA or RTG) with sound through AHI.
 
 Requirements
 ------------
