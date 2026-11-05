@@ -18,7 +18,10 @@ ACGAME  ?= ../amicradle-guest/gameports/acgame
 OPENGPU ?= ../OpenGPU-SDK
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
 CPU     ?= -m68040 -m68881
-OPT     ?= -O2 -fomit-frame-pointer -ffast-math
+# No -ffast-math, as in the software build: with it GCC emits fsin, fcos and
+# fatan, which a 68040 or 68060 traps to software, and the software build's
+# edge sort looped for ever under it.
+OPT     ?= -O2 -fomit-frame-pointer
 BUILD   = build/openup
 
 INCS    = -Iamiga/openup -IWinQuake -Iamiga -I$(OPENGPU)/include -I$(ACGAME)/include -I$(NDK)
