@@ -26,11 +26,12 @@ cd "$ROOT"
 if [ ! -x "$STOVE/bin/m68k-amigaos-gcc" ] && [ -x "$STOVE/prefix/bin/m68k-amigaos-gcc" ]; then
     STOVE="$STOVE/prefix"
 fi
-# Cradle's checkout of the guest repository sits beside this one.
-if [ -z "${ACGAME:-}" ] && [ -d "$ROOT/../DalsinAI__amigachrome-guest/gameports/acgame" ]; then
-    ACGAME="$ROOT/../DalsinAI__amigachrome-guest/gameports/acgame"
-    git -C "$ACGAME" log -1 --format='ACGame from %h %s' 2>&1 || true
-fi
+# Timing only: ACGame's backend linked in, from DalsinAI/acgame a3ea99f.
+git init -q "$BUILD/acgame"
+git -C "$BUILD/acgame" fetch -q --depth 1 https://github.com/DalsinAI/acgame a3ea99f2a6d7376c8060e695e5d9c2878dbedc76
+git -C "$BUILD/acgame" checkout -q FETCH_HEAD
+ACGAME="$BUILD/acgame"
+echo "Cradle's guest checkout: $(git -C "$ROOT/../DalsinAI__amigachrome-guest" log -1 --format='%h %ci' 2>&1)" 
 PATHS="STOVE=$STOVE"
 for v in NDK ACGAME OPENGPU; do
     eval "val=\${$v:-}"
