@@ -17,8 +17,15 @@ Requirements
 Installing
 ----------
 
-Unpack the archive where you keep games (lha x quake-...lha Games:), then
-copy pak0.pak (and pak1.pak of the full game) into the drawer's id1 drawer.
+Unpack the archive anywhere (on AmiCradle: SYS:Utilities/OpenCompress x
+quake-...lha RAM:), then double-click Install-Quake beside the Quake
+drawer: it asks where to put the game (Work:Games by default) and keeps the
+id1 drawer of an earlier install. Then copy pak0.pak (and pak1.pak of the
+full game) into the installed drawer's id1 drawer.
+
+The drawer's Libs holds the acgame.library the game was built against, and
+the game opens that copy first. It is DalsinAI/acgame at commit
+@ACGAME_COMMIT@.
 
 Playing
 -------

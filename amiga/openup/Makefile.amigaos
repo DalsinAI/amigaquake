@@ -5,7 +5,7 @@
 #
 #   make -f amiga/openup/Makefile.amigaos STOVE=/path/to/os32-gcc16/prefix \
 #        NDK=/path/to/gfopensdk/OpenNDK/Include_H \
-#        ACGAME=/path/to/amicradle-guest/gameports/acgame \
+#        ACGAME=/path/to/acgame ACGAMELIB=/path/to/acgame/build-amiga \
 #        OPENGPU=/path/to/OpenGPU-SDK
 #
 # OPENGPU is the OpenGPU developer kit (Developer/OpenGPU-SDK on an
@@ -14,7 +14,8 @@
 
 STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16/prefix
 NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
-ACGAME  ?= ../amicradle-guest/gameports/acgame
+ACGAME  ?= ../acgame
+ACGAMELIB ?= $(ACGAME)/build-amiga
 OPENGPU ?= ../OpenGPU-SDK
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
 CPU     ?= -m68040 -m68881
@@ -29,8 +30,6 @@ CFLAGS  = -noixemul -std=gnu99 $(OPT) $(CPU) -w -fpermissive -fcommon -fno-stric
           -include amiga/openup/openup.h
 OWNFLAGS = -noixemul -std=gnu99 $(OPT) $(CPU) -Wall -Wno-unused-parameter -DGLQUAKE $(INCS) \
           -include amiga/openup/openup.h
-ACFLAGS = -noixemul -std=gnu99 -O2 $(CPU) -Wall -Wextra -Werror \
-          -fno-delete-null-pointer-checks -I$(ACGAME)/include -I$(NDK)
 LDFLAGS = -noixemul $(CPU) -L$(OPENGPU)/lib
 
 ENGINE  = cl_demo cl_input cl_main cl_parse cl_tent chase cmd common console crc cvar \
@@ -40,14 +39,12 @@ ENGINE  = cl_demo cl_input cl_main cl_parse cl_tent chase cmd common console crc
           sv_user zone view wad world cd_null snd_dma snd_mem snd_mix
 OWN     = sys_acgame snd_acgame sys_amiga stack
 OPENUP  = gl_vidmgl
-ACG     = c2p_ref ham8 platform_aros_aga
-OBJS    = $(ENGINE:%=$(BUILD)/%.o) $(OWN:%=$(BUILD)/amiga/%.o) $(OPENUP:%=$(BUILD)/openup/%.o) \
-          $(ACG:%=$(BUILD)/acgame/%.o)
+OBJS    = $(ENGINE:%=$(BUILD)/%.o) $(OWN:%=$(BUILD)/amiga/%.o) $(OPENUP:%=$(BUILD)/openup/%.o)
 
 all: $(BUILD)/openupquake
 
 $(BUILD)/openupquake: $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ -lmgl -lminigl -lm
+	$(CC) $(LDFLAGS) -o $@ $^ $(ACGAMELIB)/libacgame.a -lmgl -lminigl -lm
 
 $(BUILD)/%.o: WinQuake/%.c
 	@mkdir -p $(dir $@)
@@ -60,10 +57,6 @@ $(BUILD)/amiga/%.o: amiga/%.c
 $(BUILD)/openup/%.o: amiga/openup/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(OWNFLAGS) -c -o $@ $<
-
-$(BUILD)/acgame/%.o: $(ACGAME)/src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(ACFLAGS) -c -o $@ $<
 
 clean:
 	rm -rf $(BUILD)
