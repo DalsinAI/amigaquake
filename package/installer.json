@@ -1,0 +1,13 @@
+{
+  "name": "Quake",
+  "version": "2.30-amiga2",
+  "drawer": "Quake",
+  "program": "quake",
+  "cpu": "68040",
+  "fpu": true,
+  "space": 4000000,
+  "modules": [],
+  "keep": ["id1"],
+  "parent": "Work:Games",
+  "badge": "../icons/art/quake.png"
+}
