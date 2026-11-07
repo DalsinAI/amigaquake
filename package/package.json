@@ -9,6 +9,11 @@
       "check": "executable_sha256"
     },
     {
+      "name": "Libs/acgame.library",
+      "build": "acgame.library",
+      "check": "acgame_library_sha256"
+    },
+    {
       "name": "quake.info",
       "repo": "icons/quake.info"
     },
@@ -74,5 +79,16 @@
       "Architecture",
       "m68k-amigaos >= 3.0"
     ]
+  ],
+  "root": [
+    {
+      "name": "Install-Quake",
+      "repo": "package/installer/Install-Quake",
+      "installer": true
+    },
+    {
+      "name": "Install-Quake.info",
+      "repo": "package/installer/Install-Quake.info"
+    }
   ]
 }

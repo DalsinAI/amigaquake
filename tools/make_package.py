@@ -15,6 +15,12 @@ package/package.json says what goes in the drawer, from where:
   "check"        optional, on a "build" member: the receipt.json field that
                  must be its SHA-256
   "aminet"       the Aminet readme's head: [field, value] pairs
+  "root"         files at the archive's root, beside the drawer, each with
+                 "name" and "repo": the Amiga Installer script and its icon
+                 (amicradle scripts/port_installer.py writes them from
+                 package/installer.json). "installer": true on the script
+                 checks its $VER names this version, so a script made for
+                 another version is not shipped
 
 BUILD holds what the port's build-amiga.sh made, with receipt.json. A
 template's fields are @VERSION@ and @FIELD@ for any text field FIELD of
@@ -23,7 +29,8 @@ line over 78 characters.
 
 OUT gets:
   ARCHIVE.lha          level-1 headers, -lh5-, as Amiga LhA writes them
-                       (tools/lha_archive.py), the drawer and its icon
+                       (tools/lha_archive.py), the drawer and its icon, and
+                       the "root" files beside them
   ARCHIVE.lha.sha256
   ARCHIVE.readme       the Aminet-style description
   DRAWER/ DRAWER.info  the drawer as it unpacks
@@ -132,6 +139,15 @@ def main() -> int:
 
     members = [lha_archive.Member(f"{drawer}/{p}", b, prot, "", stamp) for p, b, prot in files]
     members.append(lha_archive.Member(f"{drawer}.info", (ROOT / spec["drawer_icon"]).read_bytes(), 0, "", stamp))
+    for m in spec.get("root", []):
+        name, blob = m["name"], (ROOT / m["repo"]).read_bytes()
+        if "/" in name or name.lower() in (drawer.lower(), f"{drawer}.info".lower()):
+            raise SystemExit(f"package.json: root member {name} is not a file of its own at the root")
+        if m.get("installer"):
+            head = blob.split(b"\n", 1)[0].decode("latin-1")
+            if not head.startswith(f"; $VER: {name} {args.version} ("):
+                raise SystemExit(f"{name} was made for another version ({head!r}): run port_installer.py again")
+        members.append(lha_archive.Member(name, blob, 0, "", stamp))
     listing = [{"path": m.path, "bytes": len(m.data), "sha256": sha256(m.data)} for m in members]
 
     args.out.mkdir(parents=True, exist_ok=True)
