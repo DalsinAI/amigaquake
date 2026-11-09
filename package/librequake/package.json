@@ -10,7 +10,6 @@
     {"name": "COPYING.txt", "repo": "gnu.txt"},
     {"name": "COPYING.txt.info", "repo": "package/librequake/icons/COPYING.txt.info"},
     {"name": "id1.info", "repo": "package/librequake/icons/id1.info"},
-    {"name": "docs.info", "repo": "package/librequake/icons/docs.info"},
     {"name": "", "tar": "data.tar"}
   ],
   "aminet": [

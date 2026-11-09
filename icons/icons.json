@@ -1,5 +1,5 @@
 {
-  "about": "The Workbench icons of the Quake drawer: python3 AMICRADLE/scripts/port_icons.py icons/icons.json --out icons (DalsinAI/amicradle). The art is id's own program icon (WinQuake/quake.ico).",
+  "about": "The Workbench icons of the Quake drawer: python3 AMICRADLE/scripts/port_icons.py icons/icons.json --out icons (DalsinAI/amicradle). The art (art/quake.svg, drawn as an OS 3.5 GlowIcon: shaped, shaded, see-through round the edges) is The AmiCradle Team's own, under the same terms as the other Amiga files; art/quake.png is it rendered at 128 x 128.",
   "drawer": {
     "name": "Quake"
   },
