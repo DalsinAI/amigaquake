@@ -59,8 +59,9 @@ make -f amiga/openup/Makefile.amigaos $PATHS -j"${JOBS:-2}" >> "$OUT/build-outpu
 cp build/openup/openupquake "$BUILD/openupquake"
 # One binary each for every 68040 and 68060: -m68040 -msoft-float
 # throughout, no FPU instruction in the objects, the stove's fpuauto linked in.
-{ sh "$HERE/soft-float.sh" "$STOVE" build/amigaos/quake --log "$OUT/build-output.txt" build/amigaos &&
-	sh "$HERE/soft-float.sh" "$STOVE" build/openup/openupquake build/openup; } > "$OUT/soft-float.txt" ||
+{ sh "$HERE/soft-float.sh" "$STOVE" build/amigaos/quake --log "$OUT/build-output.txt" \
+	--allow "$HERE/fpu-allow.txt" build/amigaos &&
+	sh "$HERE/soft-float.sh" "$STOVE" build/openup/openupquake --allow "$HERE/fpu-allow.txt" build/openup; } > "$OUT/soft-float.txt" ||
 	{ cat "$OUT/soft-float.txt"; exit 1; }
 cat "$OUT/soft-float.txt"
 

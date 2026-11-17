@@ -1,0 +1,2 @@
+# C constant tables in .text that objdump decodes as code (OBJECT SYMBOL  # why)
+crc.o _crctable  # Quake's CRC-16 table, static const unsigned short
