@@ -1,0 +1,6 @@
+{
+  "makefiles": [
+    "amiga/Makefile.amigaos",
+    "amiga/openup/Makefile.amigaos"
+  ]
+}
