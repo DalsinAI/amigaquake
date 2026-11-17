@@ -51,12 +51,18 @@ for v in NDK ACGAME ACGAMELIB OPENGPU; do
     eval "val=\${$v:-}"
     if [ -n "$val" ]; then PATHS="$PATHS $v=$val"; fi
 done
-make -f amiga/Makefile.amigaos $PATHS -j4 > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
+make -f amiga/Makefile.amigaos $PATHS -j"${JOBS:-2}" > "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/amigaos/quake "$BUILD/quake"
 cp build/amigaos/quake "$OUT/quake"
 # OpenUpQuake: id's GLQuake on OpenGPU's MiniGL (OPENGPU is the OpenGPU kit).
-make -f amiga/openup/Makefile.amigaos $PATHS -j4 >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
+make -f amiga/openup/Makefile.amigaos $PATHS -j"${JOBS:-2}" >> "$OUT/build-output.txt" 2>&1 || { tail -n 60 "$OUT/build-output.txt"; exit 1; }
 cp build/openup/openupquake "$BUILD/openupquake"
+# One binary each for every 68040 and 68060: -m68040 -msoft-float
+# throughout, no FPU instruction in the objects, the stove's fpuauto linked in.
+{ sh "$HERE/soft-float.sh" "$STOVE" build/amigaos/quake --log "$OUT/build-output.txt" build/amigaos &&
+	sh "$HERE/soft-float.sh" "$STOVE" build/openup/openupquake build/openup; } > "$OUT/soft-float.txt" ||
+	{ cat "$OUT/soft-float.txt"; exit 1; }
+cat "$OUT/soft-float.txt"
 
 # What the ReadMe and the check name: the program's SHA-256, the commit, the
 # compiler and the commit's date (the archive's dates, so the same inputs

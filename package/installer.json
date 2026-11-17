@@ -1,13 +1,34 @@
 {
   "name": "Quake",
-  "version": "2.30-amiga2",
+  "version": "2.30-amiga3-rc1",
   "drawer": "Quake",
   "program": "quake",
   "cpu": "68040",
   "fpu": true,
   "space": 4000000,
   "modules": [],
-  "keep": ["id1"],
+  "keep": [
+    "id1"
+  ],
   "parent": "Work:Games",
-  "badge": "../icons/art/quake.png"
+  "badge": "../icons/art/quake.png",
+  "data": [
+    {
+      "what": "the Quake data (LibreQuake's free pak files, or your own Quake's)",
+      "into": "id1",
+      "any": [
+        "pak0.pak",
+        "pak1.pak"
+      ],
+      "import": true,
+      "page": "https://github.com/lavenderdotpet/LibreQuake",
+      "download": {
+        "url": "https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/lite.zip",
+        "sha256": "428e736b2f01d953e09a08c60bee975bdc4a0ac2219e97fa095c8af41754da83",
+        "size": 55987573,
+        "root": "lite/id1",
+        "name": "librequake-lite.zip"
+      }
+    }
+  ]
 }

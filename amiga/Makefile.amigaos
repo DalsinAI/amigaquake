@@ -16,7 +16,7 @@ NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
 ACGAME  ?= ../acgame
 ACGAMELIB ?= $(ACGAME)/build-amiga
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
-CPU     ?= -m68040 -m68881
+CPU     ?= -m68040 -msoft-float
 # No -ffast-math: with it the software renderer's edge sort (R_StepActiveU)
 # met an edge left of the screen and looped for ever (demo2, E1M4).
 OPT     ?= -O2 -fomit-frame-pointer

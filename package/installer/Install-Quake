@@ -1,10 +1,10 @@
-; $VER: Install-Quake 2.30-amiga2 (6.11.2026)
+; $VER: Install-Quake 2.30-amiga3-rc1 (17.11.2026)
 ; The Amiga Installer script for Quake, an AmiCradle game port.
-; Made by amicradle scripts/port_installer.py: change the spec, not this file.
+; Made by amicradle scripts/ports/port_installer.py: change the spec, not this file.
 ; Run it from its icon, beside the Quake drawer where the archive was unpacked.
 
 (set @app-name "Quake")
-(set #version "2.30-amiga2")
+(set #version "2.30-amiga3-rc1")
 (set #drawer "Quake")
 (set #program "quake")
 (set #space 3907)  ; KB
@@ -30,7 +30,7 @@
 (if (<> (exists (tackon #from #program) (noreq)) 1)
     (abort "The Quake drawer has no quake in it. Unpack the whole archive again."))
 
-(welcome "This installs Quake 2.30-amiga2 for AmigaOS 3.2 on a 68040, 68060 or 68080 with an FPU.")
+(welcome "This installs Quake 2.30-amiga3-rc1 for AmigaOS 3.2 on a 68040, 68060 or 68080 with an FPU.")
 
 ; where: the parent drawer
 (set #default
@@ -77,11 +77,102 @@
         (dest #parent)
         (choices "Quake.info")))
 
+(set #later "")
+
+; the game data the drawer does not carry: downloaded with C:Atlas, or copied from
+; the player's own drawer, disk or CD; each file's SHA-256 checked where the spec names it
+(set #atlas (= (exists "C:Atlas" (noreq)) 1))
+
+; the Quake data (LibreQuake's free pak files, or your own Quake's)
+(set #into1 (tackon #dest "id1"))
+(if (<> (exists #into1 (noreq)) 2) (makedir #into1))
+(set #have (or (= (exists (tackon #into1 "pak0.pak") (noreq)) 1) (= (exists (tackon #into1 "pak1.pak") (noreq)) 1)))
+(if (not #have)
+    (
+        (set #how
+            (askchoice
+                (prompt "Quake needs the Quake data (LibreQuake's free pak files, or your own Quake's). How should the Installer get it?")
+                (help "Quake needs the Quake data (LibreQuake's free pak files, or your own Quake's): one of pak0.pak, pak1.pak, in id1. Download fetches librequake-lite.zip from https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/lite.zip with C:Atlas (AmiPortAtlas) and checks its SHA-256. Copy takes the files from a drawer you choose: the game's own install, a disk or a CD. The files come from https://github.com/lavenderdotpet/LibreQuake. Not now leaves the drawer as it is: run the Installer again later, or copy the files in yourself.")
+                (choices "Download it now (56 MB, needs the network)" "Copy it from my own drawer, disk or CD" "Not now: I will put it in the drawer myself")
+                (default 0)))
+        (if (and (= #how 0) (not #atlas))
+            (
+                (message "C:Atlas, which downloads it, is not on this Amiga: install AmiPortAtlas (its C/Atlas goes in C:). Or download https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/lite.zip on another computer and choose Copy.")
+                (set #how 2)
+            )
+        )
+        (if (= #how 0)
+            (
+                (set #arc1 (tackon #dest "librequake-lite.zip"))
+                (working "Downloading librequake-lite.zip for the Quake data (LibreQuake's free pak files, or your own Quake's).")
+                (set #rc 0)
+                (if (not @pretend)
+                    (set #rc (run (cat "C:Atlas FETCH URL=\"https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/lite.zip\" TO=\"" #arc1 "\" SHA256=428e736b2f01d953e09a08c60bee975bdc4a0ac2219e97fa095c8af41754da83"))))
+                (if (<> #rc 0)
+                    (
+                        (message "The download of librequake-lite.zip did not complete or did not check out. Quake is installed without the Quake data (LibreQuake's free pak files, or your own Quake's): run Install-Quake again to try once more.")
+                        (set #how 2)
+                    )
+                )
+                (if (and (= #how 0) (<> (exists "SYS:Utilities/GFOpenCompress" (noreq)) 1))
+                    (
+                        (message "SYS:Utilities/GFOpenCompress, which unpacks librequake-lite.zip, is not on this Amiga. It is left in the drawer: unpack it there yourself.")
+                        (set #how 2)
+                    )
+                )
+                (if (= #how 0)
+                    (
+                        (set #unpack (tackon #dest "Unpack"))
+                        (if (= (exists #unpack (noreq)) 2) (delete #unpack (all) (optional "force")))
+                        (makedir #unpack)
+                        (working "Unpacking librequake-lite.zip.")
+                        (if (not @pretend) (run (cat "SYS:Utilities/GFOpenCompress x \"" #arc1 "\" \"" #unpack "\" >NIL:")))
+                        (copyfiles
+                            (prompt "Copying the Quake data (LibreQuake's free pak files, or your own Quake's)")
+                            (help @copyfiles-help)
+                            (source (tackon #unpack "lite/id1"))
+                            (dest #into1)
+                            (choices "pak0.pak" "pak1.pak")
+                            (optional "nofail" "force"))
+                        (delete #unpack (all) (optional "force"))
+                        (delete #arc1 (optional "force"))
+                    )
+                )
+            )
+        )
+        (if (= #how 1)
+            (
+                (set #src
+                    (askdir
+                        (prompt "Choose the drawer (or disk, or CD) that has one of pak0.pak, pak1.pak.")
+                        (help "Quake needs the Quake data (LibreQuake's free pak files, or your own Quake's): one of pak0.pak, pak1.pak, in id1. Download fetches librequake-lite.zip from https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/lite.zip with C:Atlas (AmiPortAtlas) and checks its SHA-256. Copy takes the files from a drawer you choose: the game's own install, a disk or a CD. The files come from https://github.com/lavenderdotpet/LibreQuake. Not now leaves the drawer as it is: run the Installer again later, or copy the files in yourself.")
+                        (default #dest)))
+                (set #ok 1)
+                (if (and #ok (not (or (= (exists (tackon #src "pak0.pak") (noreq)) 1) (= (exists (tackon #src "pak1.pak") (noreq)) 1))))
+                    ((set #ok 0) (message (cat "There is none of pak0.pak, pak1.pak in " #src ". Nothing was copied for the Quake data (LibreQuake's free pak files, or your own Quake's)."))))
+                (if #ok
+                    (copyfiles
+                        (prompt "Copying the Quake data (LibreQuake's free pak files, or your own Quake's)")
+                        (help @copyfiles-help)
+                        (source #src)
+                        (dest #into1)
+                        (choices "pak0.pak" "pak1.pak")
+                        (optional "nofail" "force")))
+            )
+        )
+        (if (= #how 2)
+            (set #later (if (= #later "") "the Quake data (LibreQuake's free pak files, or your own Quake's)" (cat #later ", " "the Quake data (LibreQuake's free pak files, or your own Quake's)")))
+        )
+    )
+)
+(complete 90)
+
 (set @default-dest #dest)
 (complete 100)
 (if @pretend
     (message (cat "Pretend: nothing was copied or changed. Quake would have gone in " #dest "."))
-    (message (cat "Quake 2.30-amiga2 is installed in " #dest "."
+    (message (cat "Quake 2.30-amiga3-rc1 is installed in " #dest "."
                   "\n\nTo start it, open the Quake drawer and double-click the quake icon."
-                  (if (= #kept "") "" (cat "\n\nLeft as they were: " #kept ".")))))
+                  (if (= #kept "") "" (cat "\n\nLeft as they were: " #kept "."))
+                  (if (= #later "") "" (cat "\n\nStill to add to the drawer: " #later ". Run Install-Quake again to fetch or copy it.")))))
 (exit (quiet))

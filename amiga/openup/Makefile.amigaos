@@ -18,7 +18,7 @@ ACGAME  ?= ../acgame
 ACGAMELIB ?= $(ACGAME)/build-amiga
 OPENGPU ?= ../OpenGPU-SDK
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
-CPU     ?= -m68040 -m68881
+CPU     ?= -m68040 -msoft-float
 # No -ffast-math, as in the software build: with it GCC emits fsin, fcos and
 # fatan, which a 68040 or 68060 traps to software, and the software build's
 # edge sort looped for ever under it.
